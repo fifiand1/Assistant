@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">京东抢茅台</string>
+    <string name="wx_hb">微信抢红包</string>
+    <string name="accessibility_on">无障碍已开启</string>
+    <string name="accessibility_off">无障碍已关闭</string>
+    <string name="go_accessibility">去开启无障碍</string>
+
+    <string name="service_ticker">京东抢茅台 正在运行</string>
+    <string name="service_title">京东抢茅台</string>
+    <string name="service_text">京东抢茅台 正在运行…</string>
+</resources>

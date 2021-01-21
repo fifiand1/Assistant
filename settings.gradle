@@ -1,0 +1,3 @@
+include ':daemon-guard'
+include ':app'
+rootProject.name='Assistant'
