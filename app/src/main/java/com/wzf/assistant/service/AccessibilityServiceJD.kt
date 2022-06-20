@@ -18,6 +18,7 @@ class AccessibilityServiceJD : AccessibilityService() {
     private val jdPackageName = "com.jingdong.app.mall"
     private val wxPackageName = "com.tencent.mm"
     private val dagePackageName = "com.happyelements.es2"
+    private var dageing = false
     var mainScope: CoroutineScope? = null
 
     override fun onInterrupt() {
@@ -37,8 +38,10 @@ class AccessibilityServiceJD : AccessibilityService() {
     private fun dage(event: AccessibilityEvent) {
         var bounds = Rect()
         rootInActiveWindow.getBoundsInScreen(bounds)
+        if (dageing) return
         mainScope?.launch {
             while (true) {
+                dageing = true
                 delay(3000)
                 val path = Path()
                 val path2 = Path()
