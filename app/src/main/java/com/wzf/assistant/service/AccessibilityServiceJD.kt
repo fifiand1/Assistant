@@ -1,14 +1,24 @@
 package com.wzf.assistant.service
 
 import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.GestureDescription
+import android.graphics.Path
+import android.graphics.Rect
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import android.widget.Toast
 import com.wzf.assistant.utils.loge
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class AccessibilityServiceJD : AccessibilityService() {
 
     private val jdPackageName = "com.jingdong.app.mall"
     private val wxPackageName = "com.tencent.mm"
+    private val dagePackageName = "com.happyelements.es2"
+    var mainScope: CoroutineScope? = null
 
     override fun onInterrupt() {
     }
@@ -16,9 +26,51 @@ class AccessibilityServiceJD : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
         loge("event : $event")
+        mainScope = MainScope()
         when (rootInActiveWindow.packageName) {
             jdPackageName -> jingDongMaiTai(event)
             wxPackageName -> wxhb(event)
+            dagePackageName -> dage(event)
+        }
+    }
+
+    private fun dage(event: AccessibilityEvent) {
+        var bounds = Rect()
+        rootInActiveWindow.getBoundsInScreen(bounds)
+        mainScope?.launch {
+            while (true) {
+                delay(3000)
+                val path = Path()
+                val path2 = Path()
+                val x = (bounds.right * (12.5f / 15.2f))
+                val y1 = (bounds.bottom * (5.8f / 7.0f))
+                val y2 = (bounds.bottom * (6.1f / 7.0f))
+                path.moveTo(x, y1)
+                path2.moveTo(x, y2)
+                Toast.makeText(
+                    this@AccessibilityServiceJD,
+                    "点了$x-$y2",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                val gestureDescription = GestureDescription.Builder()
+                    .addStroke(GestureDescription.StrokeDescription(path, 100L, 100L))
+                    .addStroke(GestureDescription.StrokeDescription(path2, 100L, 100L))
+                    .build()
+                dispatchGesture(
+                    gestureDescription,
+                    object : AccessibilityService.GestureResultCallback() {
+                        override fun onCompleted(gestureDescription: GestureDescription?) {
+                            super.onCompleted(gestureDescription)
+                        }
+
+                        override fun onCancelled(gestureDescription: GestureDescription?) {
+                            super.onCancelled(gestureDescription)
+                        }
+                    },
+                    null
+                )
+            }
         }
     }
 
